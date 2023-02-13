@@ -1,22 +1,33 @@
-import logo from './logo.svg';
 import './App.css';
+import { useState, useCallback } from "react";
+import axios from 'axios';
+import { host, port } from './runtimeVariables';
 
 function App() {
+  const [isSending, setIsSending] = useState(false)
+
+  const sendRequest = useCallback(async () => {
+    // don't send again while we are sending
+    if (isSending) return
+    // update state
+    setIsSending(true)
+    // send the actual request
+    axios
+      .get(`http://${host}:${port}/ping`)
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  
+    setIsSending(false)
+  }, [isSending])
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <input type="button" disabled={isSending} onClick={sendRequest} value="Notify" />
       </header>
     </div>
   );

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-t-front-end
+spec:
+  template:
+    metadata:
+      name: pod-t-front-end
+      labels:
+        app: t-front-end
+    spec:
+      containers:
+        - name: t-front-end-container
+          image: acmlira/t-front-end:dev
+          imagePullPolicy: "IfNotPresent"
+          envFrom:
+            - configMapRef:
+                name: configmap-t-front-end
+  replicas: 3
+  selector:
+    matchLabels:
+      app: t-front-end
